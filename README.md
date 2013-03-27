@@ -1,0 +1,4 @@
+chessAI
+=======
+
+Emergent Computing project
