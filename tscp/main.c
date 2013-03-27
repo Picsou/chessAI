@@ -51,7 +51,7 @@ int main()
 	init_board();
 	open_book();
 	gen();
-	computer_side = EMPTY;
+	computer_side = side;
 	max_time = 1 << 25;
 	max_depth = 1;
 	for (;;) {
@@ -61,7 +61,7 @@ int main()
 			think(1);
 			if (!pv[0][0].u) {
 				printf("(no legal moves)\n");
-				computer_side = EMPTY;
+				//computer_side = EMPTY;
 				continue;
 			}
 			printf("Computer's move: %s\n", move_str(pv[0][0].b));
@@ -69,6 +69,7 @@ int main()
 			ply = 0;
 			gen();
 			print_result();
+			computer_side ^= 1;
 			continue;
 		}
 
@@ -422,11 +423,15 @@ void print_result()
 		}
 		else
 			printf("1/2-1/2 {Stalemate}\n");
+		exit(0);
 	}
-	else if (reps() == 3)
+	else if (reps() == 3) {
 		printf("1/2-1/2 {Draw by repetition}\n");
-	else if (fifty >= 100)
+		exit(0);
+	}
+	else if (fifty >= 100) {
 		printf("1/2-1/2 {Draw by fifty move rule}\n");
+	}
 }
 
 
