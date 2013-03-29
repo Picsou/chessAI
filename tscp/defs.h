@@ -92,3 +92,9 @@ typedef struct {
 	int fifty;
 	int hash;
 } hist_t;
+
+/* structure containing an individual of the evolution strategy */
+typedef struct {
+	int id;
+	int pieces_value[5];
+} evolution_individual;
