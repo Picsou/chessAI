@@ -17,11 +17,12 @@
 int indiv_per_generation = 4;
 
 void init_evolution() {
-	open_file("evolution_individuals.txt");
+	FILE *evolution_file;
+	evolution_file = open_file("evolution_individuals.txt");
 
 	int i;
 	for (i = 0 ; i < indiv_per_generation; i++) {
-		retrieve_individual
+		evolution_individual test = retrieve_individual(evolution_file);
 	}
 
 	close_file(evolution_file);

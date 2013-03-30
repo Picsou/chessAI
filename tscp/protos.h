@@ -5,6 +5,7 @@
  *	Copyright 1997 Tom Kerrigan
  */
 
+#include <stdio.h>
 
 /* prototypes */
 
@@ -55,3 +56,9 @@ void print_board();
 void xboard();
 void print_result();
 void bench();
+
+/* writer.c */
+FILE* open_file(char file_name[]);
+void close_file(FILE *file);
+void write_individual_values(FILE *file, evolution_individual ei);
+evolution_individual retrieve_individual(FILE *file);

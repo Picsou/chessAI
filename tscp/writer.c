@@ -14,15 +14,11 @@
 
 FILE *evo;
 
-void open_file(FILE *file, char file_name[]) {
-	printf("HIIIII");
-	evo = fopen(file_name, "r+");
-	if (!evo)
-		printf("File not found.\n");
-
-	file = fopen(file_name, "r+");
+FILE* open_file(char file_name[]) {
+	FILE *file = fopen(file_name, "r+");
 	if (!file)
 		printf("File not found.\n");
+	return file;
 }
 
 void close_file(FILE *file) {
@@ -41,13 +37,7 @@ void write_individual_values(FILE *file, evolution_individual ei) {
 evolution_individual retrieve_individual(FILE *file) {
 	evolution_individual retrieved_individual;
 	char line[50];
-	char *split;
-	printf("hello\n");
-	if (!file) {
-		printf("erreur");
-	}
-	char *test = fgets(line, 50, file);
-	printf("Apres");
+	char *split;fgets(line, 50, file);
 	printf("%s", line);
 	split = strtok(line, " \n");
 	int j;
@@ -71,33 +61,17 @@ evolution_individual retrieve_individual(FILE *file) {
 }
 
 int main() {
-	printf("Beginprogram");
-	FILE *evolution_file = malloc(sizeof(struct FILE));
-	open_file(evolution_file, "evolution_individuals.txt");
-	char newline[50];
-	fgets(newline, 50, evolution_file);
+	FILE *evolution_file;
+	evolution_file = open_file("evolution_individuals.txt");
 
-	char test[50];
-	//read
-	/*while (!feof(evolution_file)) {
+	evolution_individual eitest = retrieve_individual(evolution_file);
 
-	 fscanf(evolution_file, "%s\n", test);
-	 printf("Content : %s\n", test);
-	 }*/
-	printf("Content before\n");
-	evolution_individual eitest = retrieve_individual(evo);
-
-	//write
-	/*printf("Entrez une chaine de carateres : ");
-	 scanf("%s", test);
-	 printf("%s\n", test);*/
-	//fprintf(evolution_file, "%s\n", test);
 	evolution_individual individual = { .id = 1, .pieces_value = { 100, 300,
 			300, 500, 900 } };
 
 	//write_individual_values(evolution_file, individual);
 
-	//close_file(evo);
+	close_file(evolution_file);
 	return 0;
 }
 
