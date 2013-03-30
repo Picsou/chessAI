@@ -22,9 +22,11 @@
 
 
 /* the values of the pieces */
-int piece_value[6] = {
+/*int piece_value[6] = {
 	100, 300, 300, 500, 900, 0
-};
+};*/
+
+int piece_value[2][6] = {{ 100, 300, 300, 500, 900, 0 }, { 100, 300, 300, 500, 900, 0 }};
 
 /* The "pcsq" arrays are piece/square tables. They're values
    added to the material value of the piece based on the
@@ -129,7 +131,7 @@ int eval()
 		if (color[i] == EMPTY)
 			continue;
 		if (piece[i] == PAWN) {
-			pawn_mat[color[i]] += piece_value[PAWN];
+			pawn_mat[color[i]] += piece_value[color[i]][PAWN];
 			f = COL(i) + 1;  /* add 1 because of the extra file in the array */
 			if (color[i] == LIGHT) {
 				if (pawn_rank[LIGHT][f] < ROW(i))
@@ -141,7 +143,7 @@ int eval()
 			}
 		}
 		else
-			piece_mat[color[i]] += piece_value[piece[i]];
+			piece_mat[color[i]] += piece_value[color[i]][piece[i]];
 	}
 
 	/* this is the second pass: evaluate each piece */

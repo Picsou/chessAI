@@ -50,6 +50,8 @@ int main()
 	init_hash();
 	init_board();
 	open_book();
+	/* Temporarily deactivating the book */
+	close_book();
 	gen();
 	computer_side = side;
 	max_time = 1 << 25;
@@ -69,11 +71,11 @@ int main()
 			ply = 0;
 			gen();
 			print_result();
-			computer_side ^= 1;
+			computer_side = side;
 			continue;
 		}
 
-		/* get user input */
+		/* get user input
 		printf("tscp> ");
 		if (scanf("%s", s) == EOF)
 			return 0;
@@ -143,7 +145,7 @@ int main()
 			continue;
 		}
 
-		/* maybe the user entered a move? */
+		 maybe the user entered a move?
 		m = parse_move(s);
 		if (m == -1 || !makemove(gen_dat[m].m.b))
 			printf("Illegal move.\n");
@@ -151,7 +153,7 @@ int main()
 			ply = 0;
 			gen();
 			print_result();
-		}
+		}*/
 	}
 	close_book();
 	return 0;
@@ -423,14 +425,21 @@ void print_result()
 		}
 		else
 			printf("1/2-1/2 {Stalemate}\n");
-		exit(0);
+		init_board();
+		gen();
+		//exit(0);
 	}
 	else if (reps() == 3) {
 		printf("1/2-1/2 {Draw by repetition}\n");
-		exit(0);
+		init_board();
+		gen();
+		//exit(0);
 	}
 	else if (fifty >= 100) {
 		printf("1/2-1/2 {Draw by fifty move rule}\n");
+		init_board();
+		gen();
+		//exit(0);
 	}
 }
 
