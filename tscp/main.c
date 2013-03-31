@@ -57,6 +57,7 @@ int main()
 	max_time = 1 << 25;
 	max_depth = 1;
 	for (;;) {
+		// Call to next_game() | change piece_value values for both sides | when game finished, assign winner |   |   |
 		if (side == computer_side) {  /* computer's turn */
 			
 			/* think about the move and make it */

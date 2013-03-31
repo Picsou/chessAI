@@ -97,4 +97,12 @@ typedef struct {
 typedef struct {
 	int id;
 	int pieces_value[5];
+	int fitness;
 } evolution_individual;
+
+/* structure that represents a match-up between two AI */
+typedef struct {
+	int white_id;
+	int black_id;
+	int winner;
+} match_up;

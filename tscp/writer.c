@@ -12,10 +12,8 @@
 #include "data.h"
 #include "protos.h"
 
-FILE *evo;
-
-FILE* open_file(char file_name[]) {
-	FILE *file = fopen(file_name, "r+");
+FILE* open_file(char file_name[], char mode[]) {
+	FILE *file = fopen(file_name, mode);
 	if (!file)
 		printf("File not found.\n");
 	return file;
@@ -28,14 +26,15 @@ void close_file(FILE *file) {
 }
 
 void write_individual_values(FILE *file, evolution_individual *ei) {
-	fprintf(file, "%d %d %d %d %d %d\n", ei->id, ei->pieces_value[0],
+	fprintf(file, "%d %d %d %d %d %d %d\n", ei->id, ei->pieces_value[0],
 			ei->pieces_value[1], ei->pieces_value[2], ei->pieces_value[3],
-			ei->pieces_value[4]);
+			ei->pieces_value[4], ei->fitness);
 
 }
 
 evolution_individual* retrieve_individual(FILE *file) {
 	evolution_individual *retrieved_individual = malloc(sizeof(evolution_individual));
+	retrieved_individual->fitness = 0;
 	char line[50];
 	char *split;
 	fgets(line, 50, file);
@@ -52,18 +51,19 @@ evolution_individual* retrieve_individual(FILE *file) {
 		}
 		split = strtok(NULL, " \n");
 	}
-	printf("%d %d %d %d %d %d\n", retrieved_individual->id,
+	printf("%d %d %d %d %d %d %d\n", retrieved_individual->id,
 			retrieved_individual->pieces_value[0],
 			retrieved_individual->pieces_value[1],
 			retrieved_individual->pieces_value[2],
 			retrieved_individual->pieces_value[3],
-			retrieved_individual->pieces_value[4]);
+			retrieved_individual->pieces_value[4],
+			retrieved_individual->fitness);
 	return retrieved_individual;
 }
 
-int main() {
+/*int main() {
 	FILE *evolution_file;
-	evolution_file = open_file("evolution_individuals.txt");
+	evolution_file = open_file("evolution_individuals.txt", "r");
 
 	evolution_individual *eitest = retrieve_individual(evolution_file);
 	eitest->pieces_value[1] = 5555555;
@@ -71,9 +71,9 @@ int main() {
 	//evolution_individual individual = { .id = 1, .pieces_value = { 100, 300,
 	//		300, 500, 900 } };
 
-	write_individual_values(evolution_file, eitest);
+	//write_individual_values(evolution_file, eitest);
 
 	close_file(evolution_file);
 	return 0;
-}
+}*/
 

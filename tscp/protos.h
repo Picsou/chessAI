@@ -58,7 +58,7 @@ void print_result();
 void bench();
 
 /* writer.c */
-FILE* open_file(char file_name[]);
+FILE* open_file(char file_name[], char mode[]);
 void close_file(FILE *file);
 void write_individual_values(FILE *file, evolution_individual *ei);
 evolution_individual* retrieve_individual(FILE *file);
