@@ -26,7 +26,7 @@
 	100, 300, 300, 500, 900, 0
 };*/
 
-int piece_value[2][6] = {{ 100, 300, 300, 500, 900, 0 }, { 100, 300, 300, 500, 900, 0 }};
+int piece_value[2][6] = {{ 100, 300, 300, 100, 100, 0 }, { 100, 300, 300, 500, 900, 0 }};
 
 /* The "pcsq" arrays are piece/square tables. They're values
    added to the material value of the piece based on the

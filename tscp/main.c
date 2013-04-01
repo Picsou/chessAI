@@ -14,6 +14,7 @@
 #include "data.h"
 #include "protos.h"
 
+int game_over = 0; // knowing if the current game is finished
 
 /* get_ms() returns the milliseconds elapsed since midnight,
    January 1, 1970. */
@@ -34,8 +35,7 @@ int get_ms()
    think() when it's the computer's turn to move or prompts
    the user for a command (and deciphers it). */
 
-int main()
-{
+int main() {
 	int computer_side;
 	char s[256];
 	int m;
@@ -53,13 +53,14 @@ int main()
 	/* Temporarily deactivating the book */
 	close_book();
 	gen();
-	computer_side = side;
+	//computer_side = side;
 	max_time = 1 << 25;
 	max_depth = 1;
 	for (;;) {
-		// Call to next_game() | change piece_value values for both sides | when game finished, assign winner |   |   |
-		if (side == computer_side) {  /* computer's turn */
-			
+		for (;;) {
+			// Call to next_game() | change piece_value values for both sides | when game finished, assign winner |   |   |
+			//if (side == computer_side) {  /* computer's turn */
+
 			/* think about the move and make it */
 			think(1);
 			if (!pv[0][0].u) {
@@ -72,9 +73,19 @@ int main()
 			ply = 0;
 			gen();
 			print_result();
-			computer_side = side;
+			if (game_over) {
+				game_over = 0;
+				break;
+			}
+			//computer_side = side;
 			continue;
+			//}
 		}
+		exit(0);
+	}
+	close_book();
+	return 0;
+}
 
 		/* get user input
 		printf("tscp> ");
@@ -155,10 +166,6 @@ int main()
 			gen();
 			print_result();
 		}*/
-	}
-	close_book();
-	return 0;
-}
 
 
 /* parse the move s (in coordinate notation) and return the move's
@@ -423,24 +430,20 @@ void print_result()
 				printf("0-1 {Black mates}\n");
 			else
 				printf("1-0 {White mates}\n");
+			game_over = 1;
 		}
-		else
+		else {
 			printf("1/2-1/2 {Stalemate}\n");
-		init_board();
-		gen();
-		//exit(0);
+			game_over = 1;
+		}
 	}
 	else if (reps() == 3) {
 		printf("1/2-1/2 {Draw by repetition}\n");
-		init_board();
-		gen();
-		//exit(0);
+		game_over = 1;
 	}
 	else if (fifty >= 100) {
 		printf("1/2-1/2 {Draw by fifty move rule}\n");
-		init_board();
-		gen();
-		//exit(0);
+		game_over = 1;
 	}
 }
 

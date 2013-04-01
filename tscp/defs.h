@@ -102,7 +102,7 @@ typedef struct {
 
 /* structure that represents a match-up between two AI */
 typedef struct {
-	int white_id;
-	int black_id;
+	evolution_individual *white;
+	evolution_individual *black;
 	int winner;
 } match_up;

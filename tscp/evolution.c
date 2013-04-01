@@ -48,7 +48,7 @@ void duplicate() {
 
 /* Mutates the values of the children */
 void mutate() {
-	srand(time(NULL ));
+	srand(time(NULL));
 	int i;
 	for (i = 0; i < LAMBDA; i++) {
 		int j;
@@ -73,9 +73,9 @@ void determine_match_ups() {
 	// Store match-ups between the AIs
 	for (i = 0; i < MU + LAMBDA; i++) {
 		for (j = 0; j < MU + LAMBDA - 1; j++) {
-			match_ups_list[i + j].white_id = sorting_array[i]->id;
-			match_ups_list[i + j].black_id = sorting_array[(i + j + 1)
-					% (MU + LAMBDA)]->id;
+			match_ups_list[i + j].white = sorting_array[i];
+			match_ups_list[i + j].black = sorting_array[(i + j + 1) % (MU
+					+ LAMBDA)];
 		}
 	}
 
@@ -141,7 +141,7 @@ match_up next_game() {
 		determine_match_ups();
 		played_match_ups = 0;
 		return match_ups_list[played_match_ups];
-	} else if (played_match_ups >= LAMBDA + MU -1) { // A new generation is going to be bred
+	} else if (played_match_ups >= LAMBDA + MU - 1) { // A new generation is going to be bred
 		// Processing the results from the previous generation
 		compile_results();
 		selection();
