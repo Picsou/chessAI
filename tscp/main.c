@@ -48,15 +48,18 @@ int main() {
 	printf("\"help\" displays a list of commands.\n");
 	printf("\n");
 	init_hash();
-	init_board();
+	//init_board();
 	open_book();
 	/* Temporarily deactivating the book */
 	close_book();
-	gen();
+	//gen();
 	//computer_side = side;
 	max_time = 1 << 25;
 	max_depth = 1;
 	for (;;) {
+		init_board();
+		gen();
+		match_up game = next_game();
 		for (;;) {
 			// Call to next_game() | change piece_value values for both sides | when game finished, assign winner |   |   |
 			//if (side == computer_side) {  /* computer's turn */
@@ -81,7 +84,7 @@ int main() {
 			continue;
 			//}
 		}
-		exit(0);
+		//exit(0);
 	}
 	close_book();
 	return 0;

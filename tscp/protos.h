@@ -62,3 +62,12 @@ FILE* open_file(char file_name[], char mode[]);
 void close_file(FILE *file);
 void write_individual_values(FILE *file, evolution_individual *ei);
 evolution_individual* retrieve_individual(FILE *file);
+
+/* evolution.c */
+void init_evolution();
+void duplicate();
+void mutate();
+void determine_match_ups();
+void compile_results();
+void selection();
+match_up next_game();
