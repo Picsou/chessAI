@@ -398,3 +398,11 @@ int eval_dkp(int f)
 
 	return r;
 }
+
+void set_piece_value(match_up *game) {
+	int i;
+	for (i = 0; i < 6; i++) {
+		piece_value[0][i] = game->white->pieces_value[i];
+		piece_value[1][i] = game->black->pieces_value[i];
+	}
+}

@@ -25,7 +25,7 @@ int first_time = 1; // Special case initialization for the evolution strategy
 evolution_individual* parents[MU];
 evolution_individual* mutants[LAMBDA];
 evolution_individual* sorting_array[LAMBDA + MU];
-match_up match_ups_list[(LAMBDA + MU - 1) * (LAMBDA + MU)]; // Each AI plays white and black against another AI
+match_up* match_ups_list[(LAMBDA + MU - 1) * (LAMBDA + MU)]; // Each AI plays white and black against another AI
 int played_match_ups;
 
 void init_evolution() {
@@ -46,7 +46,6 @@ void duplicate() {
 	int i;
 	for (i = 0; i < LAMBDA; i++) {
 		evolution_individual *mutant = malloc(sizeof(evolution_individual));
-		printf("inside");
 		memcpy(mutant, parents[(i % MU)], sizeof(evolution_individual));
 		mutants[i] = mutant;
 		mutants[i]->id = individual_id;
@@ -62,10 +61,8 @@ void mutate() {
 	int i;
 	for (i = 0; i < LAMBDA; i++) {
 		int j;
-		printf("1st loop\n");
 		for (j = 0; j < 5; j++) {
-			printf("2nd loop\n");
-			mutants[i]->pieces_value[j] += rand() % 10;
+			mutants[i]->pieces_value[j] += (rand() % 10) - 5;
 		}
 	}
 	printf("End mutate\n");
@@ -88,14 +85,23 @@ void determine_match_ups() {
 		sorting_array[MU + j] = mutant;
 	}
 
+	printf("%d   :   \n", sorting_array[11]->fitness);
+
 	// Store match-ups between the AIs
 	for (i = 0; i < MU + LAMBDA; i++) {
 		for (j = 0; j < MU + LAMBDA - 1; j++) {
-			match_ups_list[i + j].white = sorting_array[i];
-			match_ups_list[i + j].black = sorting_array[(i + j + 1) % (MU
+			printf("%d\n", i + j);
+			match_up *game = malloc(sizeof(match_up));
+			game->white = sorting_array[i];
+			game->black = sorting_array[(i + j + 1) % (MU
 					+ LAMBDA)];
+			match_ups_list[i + j] = game;
+			printf("%d   :   %d\n", match_ups_list[i + j]->white->fitness, match_ups_list[i + j]->black->fitness);
 		}
 	}
+
+	printf("%d   :   %d", match_ups_list[22]->white->fitness, match_ups_list[21]->black->fitness);
+
 	printf("End matchup\n");
 }
 
@@ -109,17 +115,33 @@ void compile_results() {
 
 	/* Counting the number of victories */
 	for (i = 0; i < (LAMBDA + MU - 1) * (LAMBDA + MU); i++) {
-		int j;
-		for (j = 0; j < LAMBDA + MU; j++) {
-			if (sorting_array[j]->id == match_ups_list[i].winner) {
-				printf("%d   :    %d\n", sorting_array[j]->id, match_ups_list[i].winner);
-				if (sorting_array[j] == NULL) {
-					printf("merde\n");
-				}
-				sorting_array[j]->fitness++;
-			}
+		printf("hello + %d\n", i);
+		if (match_ups_list[i]->winner == match_ups_list[i]->white->id) {
+			printf("white");
+			match_ups_list[i]->white->fitness += 3;
+		} else if (match_ups_list[i]->winner == match_ups_list[i]->black->id) {
+			printf("black");
+			match_ups_list[i]->black->fitness += 3;
+		} else { // stalemate or draw
+			printf("both");
+			match_ups_list[i]->white->fitness += 1;
+			match_ups_list[i]->black->fitness += 1;
 		}
+
+
+
+//		int j;
+//		for (j = 0; j < LAMBDA + MU; j++) {
+//			printf("%d   :    %d\n", sorting_array[j]->id, match_ups_list[i].winner);
+//			if (sorting_array[j]->id == match_ups_list[i].winner) {
+//				sorting_array[j]->fitness += 3;
+//			} else if (match_ups_list[i].winner == -1) {
+//				sorting_array[j]->fitness++;
+//			}
+//		}
 	}
+
+	printf("TTTTTTTTTTTTTTTTTTTTTTTTT");
 	printf("End compile\n");
 }
 
@@ -132,6 +154,7 @@ void selection() {
 	do {
 		swapped = 0;
 		int i;
+		// ATTENTION POSSIBILITE DE BOUCLE INFINIE, swapped always == 0
 		for (i = 1; i < n; i++) {
 			printf("%d\n", sorting_array[i - 1]->fitness);
 			if (sorting_array[i - 1]->fitness > sorting_array[i]->fitness) {
@@ -139,11 +162,16 @@ void selection() {
 				sorting_array[i - 1] = sorting_array[i];
 				sorting_array[i] = temp;
 				swapped = 1;
-				printf("midmid\n");
 			}
 		}
 		n--;
 	} while (!swapped);
+
+	int k;
+	for (k = 0; k < LAMBDA + MU; k++) {
+			printf("%d:", sorting_array[k]->fitness);
+	}
+	printf("\n");
 
 	printf("Middle Selection\n");
 	/* Write the surviving individuals into the evolution file and the history file */
@@ -167,7 +195,7 @@ void selection() {
 /*
  * Provides the nest match to be player betweem two individuals
  */
-match_up next_game() {
+match_up* next_game() {
 	if (first_time) {
 		printf("first time\n");
 		first_time = 0;
@@ -182,6 +210,7 @@ match_up next_game() {
 		printf("games finished\n");
 		compile_results();
 		selection();
+		exit(0);
 
 		// Breeding a new generation
 		init_evolution();

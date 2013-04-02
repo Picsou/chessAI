@@ -15,6 +15,7 @@
 #include "protos.h"
 
 int game_over = 0; // knowing if the current game is finished
+match_up *current_game;
 
 /* get_ms() returns the milliseconds elapsed since midnight,
    January 1, 1970. */
@@ -59,7 +60,9 @@ int main() {
 	for (;;) {
 		init_board();
 		gen();
-		match_up game = next_game();
+		current_game = next_game();
+		set_piece_value(current_game);
+
 		for (;;) {
 			// Call to next_game() | change piece_value values for both sides | when game finished, assign winner |   |   |
 			//if (side == computer_side) {  /* computer's turn */
@@ -429,23 +432,32 @@ void print_result()
 		}
 	if (i == first_move[1]) {
 		if (in_check(side)) {
-			if (side == LIGHT)
+			if (side == LIGHT) {
 				printf("0-1 {Black mates}\n");
-			else
+				printf("%d\n", current_game->black->id);
+				current_game->winner = current_game->black->id;
+			}
+			else {
 				printf("1-0 {White mates}\n");
+				printf("%d\n", current_game->white->id);
+				current_game->winner = current_game->white->id;
+			}
 			game_over = 1;
 		}
 		else {
 			printf("1/2-1/2 {Stalemate}\n");
+			current_game->winner = -1;
 			game_over = 1;
 		}
 	}
 	else if (reps() == 3) {
 		printf("1/2-1/2 {Draw by repetition}\n");
+		current_game->winner = -1;
 		game_over = 1;
 	}
 	else if (fifty >= 100) {
 		printf("1/2-1/2 {Draw by fifty move rule}\n");
+		current_game->winner = -1;
 		game_over = 1;
 	}
 }

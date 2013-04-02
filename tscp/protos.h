@@ -46,6 +46,7 @@ int eval_light_king(int sq);
 int eval_lkp(int f);
 int eval_dark_king(int sq);
 int eval_dkp(int f);
+void set_piece_value(match_up *game);
 
 /* main.c */
 int get_ms();
@@ -70,4 +71,4 @@ void mutate();
 void determine_match_ups();
 void compile_results();
 void selection();
-match_up next_game();
+match_up* next_game();
