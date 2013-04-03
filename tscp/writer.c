@@ -29,6 +29,9 @@ void write_individual_values(FILE *file, evolution_individual *ei) {
 	fprintf(file, "%d %d %d %d %d %d %d\n", ei->id, ei->pieces_value[0],
 			ei->pieces_value[1], ei->pieces_value[2], ei->pieces_value[3],
 			ei->pieces_value[4], ei->fitness);
+	printf("%d %d %d %d %d %d %d\n", ei->id, ei->pieces_value[0],
+				ei->pieces_value[1], ei->pieces_value[2], ei->pieces_value[3],
+				ei->pieces_value[4], ei->fitness);
 
 }
 
@@ -62,6 +65,10 @@ evolution_individual* retrieve_individual(FILE *file) {
 }
 
 /*int main() {
+0 100 300 300 500 900 0
+0 100 300 300 500 900 0
+0 100 300 300 500 900 0
+0 100 300 300 500 900 0
 	FILE *evolution_file;
 	evolution_file = open_file("evolution_individuals.txt", "r");
 

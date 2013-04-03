@@ -37,9 +37,9 @@ int get_ms()
    the user for a command (and deciphers it). */
 
 int main() {
-	int computer_side;
-	char s[256];
-	int m;
+	//int begin_time = get_ms();
+	//int evolution_time = 1000;
+	//exit(0);
 
 	printf("\n");
 	printf("Tom Kerrigan's Simple Chess Program (TSCP)\n");
@@ -58,10 +58,11 @@ int main() {
 	max_time = 1 << 25;
 	max_depth = 1;
 	for (;;) {
-		init_board();
-		gen();
 		current_game = next_game();
 		set_piece_value(current_game);
+
+		init_board();
+		gen();
 
 		for (;;) {
 			// Call to next_game() | change piece_value values for both sides | when game finished, assign winner |   |   |

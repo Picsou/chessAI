@@ -70,5 +70,6 @@ void duplicate();
 void mutate();
 void determine_match_ups();
 void compile_results();
+static int compare(void const *a, void const *b);
 void selection();
 match_up* next_game();

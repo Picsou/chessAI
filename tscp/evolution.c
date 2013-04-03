@@ -27,6 +27,8 @@ evolution_individual* mutants[LAMBDA];
 evolution_individual* sorting_array[LAMBDA + MU];
 match_up* match_ups_list[(LAMBDA + MU - 1) * (LAMBDA + MU)]; // Each AI plays white and black against another AI
 int played_match_ups;
+int begin_time = 0;
+int evolution_time = 3000;
 
 void init_evolution() {
 	printf("Begin init\n");
@@ -65,7 +67,7 @@ void mutate() {
 			mutants[i]->pieces_value[j] += (rand() % 10) - 5;
 		}
 	}
-	printf("End mutate\n");
+	printf("End mutint begin_time = get_ms();ate\n");
 }
 
 /* Parents and children will play altogether to determine the fittest individuals */
@@ -88,19 +90,21 @@ void determine_match_ups() {
 	printf("%d   :   \n", sorting_array[11]->fitness);
 
 	// Store match-ups between the AIs
+	int match_up_position = 0;
 	for (i = 0; i < MU + LAMBDA; i++) {
 		for (j = 0; j < MU + LAMBDA - 1; j++) {
-			printf("%d\n", i + j);
+			//printf("%d %d\n", i, j);
 			match_up *game = malloc(sizeof(match_up));
 			game->white = sorting_array[i];
 			game->black = sorting_array[(i + j + 1) % (MU
 					+ LAMBDA)];
-			match_ups_list[i + j] = game;
-			printf("%d   :   %d\n", match_ups_list[i + j]->white->fitness, match_ups_list[i + j]->black->fitness);
+			match_ups_list[match_up_position] = game;
+			match_up_position++;
+			//printf("%d   :   %d\n", match_ups_list[i + j]->white->fitness, match_ups_list[i + j]->black->fitness);
 		}
 	}
 
-	printf("%d   :   %d", match_ups_list[22]->white->fitness, match_ups_list[21]->black->fitness);
+	//printf("%d   :   %d", match_ups_list[132]->white->fitness, match_ups_list[21]->black->fitness);
 
 	printf("End matchup\n");
 }
@@ -145,29 +149,28 @@ void compile_results() {
 	printf("End compile\n");
 }
 
+/* Ordering function for sorting the individuals through their number of victories */
+static int compare(void const *a, void const *b) {
+	evolution_individual *pa = *(evolution_individual * const *) a;
+	evolution_individual *pb = *(evolution_individual * const *) b;
+	return pa->fitness - pb->fitness;
+}
+
 /* The parent array becomes the array of parents for the next generation. Selection occurs through
  * a bubble sort based on the fitness of each AI. */
 void selection() {
 	printf("Begin selection\n");
 	int n = MU + LAMBDA;
 	int swapped;
-	do {
-		swapped = 0;
-		int i;
-		// ATTENTION POSSIBILITE DE BOUCLE INFINIE, swapped always == 0
-		for (i = 1; i < n; i++) {
-			printf("%d\n", sorting_array[i - 1]->fitness);
-			if (sorting_array[i - 1]->fitness > sorting_array[i]->fitness) {
-				evolution_individual *temp = sorting_array[i - 1];
-				sorting_array[i - 1] = sorting_array[i];
-				sorting_array[i] = temp;
-				swapped = 1;
-			}
-		}
-		n--;
-	} while (!swapped);
 
 	int k;
+	for (k = 0; k < LAMBDA + MU; k++) {
+		printf("%d:", sorting_array[k]->fitness);
+	}
+	printf("\n");
+
+	qsort(sorting_array, LAMBDA + MU , sizeof(sorting_array[0]), compare);
+
 	for (k = 0; k < LAMBDA + MU; k++) {
 			printf("%d:", sorting_array[k]->fitness);
 	}
@@ -198,6 +201,7 @@ void selection() {
 match_up* next_game() {
 	if (first_time) {
 		printf("first time\n");
+		begin_time = get_ms();
 		first_time = 0;
 		init_evolution();
 		duplicate();
@@ -210,7 +214,10 @@ match_up* next_game() {
 		printf("games finished\n");
 		compile_results();
 		selection();
-		exit(0);
+		if (get_ms() - begin_time > evolution_time) { /* The simulation ran for the required time by the user */
+			exit(0);
+		}
+		//exit(0);
 
 		// Breeding a new generation
 		init_evolution();
