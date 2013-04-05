@@ -29,9 +29,6 @@ void write_individual_values(FILE *file, evolution_individual *ei) {
 	fprintf(file, "%d %d %d %d %d %d %d\n", ei->id, ei->pieces_value[0],
 			ei->pieces_value[1], ei->pieces_value[2], ei->pieces_value[3],
 			ei->pieces_value[4], ei->fitness);
-	printf("%d %d %d %d %d %d %d\n", ei->id, ei->pieces_value[0],
-				ei->pieces_value[1], ei->pieces_value[2], ei->pieces_value[3],
-				ei->pieces_value[4], ei->fitness);
 
 }
 
@@ -41,11 +38,9 @@ evolution_individual* retrieve_individual(FILE *file) {
 	char line[50];
 	char *split;
 	fgets(line, 50, file);
-	printf("%s", line);
 	split = strtok(line, " \n");
 	int j;
 	for (j = 0; j < 6; j++) {
-		printf("%s\n", split);
 		int parsedInt = strtol(split, NULL, 10);
 		if (j == 0) {
 			retrieved_individual->id = parsedInt;
@@ -54,33 +49,12 @@ evolution_individual* retrieve_individual(FILE *file) {
 		}
 		split = strtok(NULL, " \n");
 	}
-	printf("%d %d %d %d %d %d %d\n", retrieved_individual->id,
-			retrieved_individual->pieces_value[0],
-			retrieved_individual->pieces_value[1],
-			retrieved_individual->pieces_value[2],
-			retrieved_individual->pieces_value[3],
-			retrieved_individual->pieces_value[4],
-			retrieved_individual->fitness);
+//	printf("%d %d %d %d %d %d %d\n", retrieved_individual->id,
+//			retrieved_individual->pieces_value[0],
+//			retrieved_individual->pieces_value[1],
+//			retrieved_individual->pieces_value[2],
+//			retrieved_individual->pieces_value[3],
+//			retrieved_individual->pieces_value[4],
+//			retrieved_individual->fitness);
 	return retrieved_individual;
 }
-
-/*int main() {
-0 100 300 300 500 900 0
-0 100 300 300 500 900 0
-0 100 300 300 500 900 0
-0 100 300 300 500 900 0
-	FILE *evolution_file;
-	evolution_file = open_file("evolution_individuals.txt", "r");
-
-	evolution_individual *eitest = retrieve_individual(evolution_file);
-	eitest->pieces_value[1] = 5555555;
-
-	//evolution_individual individual = { .id = 1, .pieces_value = { 100, 300,
-	//		300, 500, 900 } };
-
-	//write_individual_values(evolution_file, eitest);
-
-	close_file(evolution_file);
-	return 0;
-}*/
-

@@ -17,18 +17,23 @@
 #include "data.h"
 #include "protos.h"
 
+/* Evolution parameters */
 #define MU			4
 #define LAMBDA		8
 
-int individual_id = 4; // the original individuals are retrieved from the evolution file
+int individual_id = 4; /* the original individuals (0,1,2,3) are retrieved from the evolution file */
+int begin_time = 0;
+int evolution_time = 3000; /* Running time of the evolution algorithm (the last iteration finishes before leaving the program) */
+
+/* AIs' breeding */
 int first_time = 1; // Special case initialization for the evolution strategy
 evolution_individual* parents[MU];
 evolution_individual* mutants[LAMBDA];
 evolution_individual* sorting_array[LAMBDA + MU];
+
+/* Competition list */
 match_up* match_ups_list[(LAMBDA + MU - 1) * (LAMBDA + MU)]; // Each AI plays white and black against another AI
 int played_match_ups;
-int begin_time = 0;
-int evolution_time = 3000;
 
 void init_evolution() {
 	printf("Begin init\n");
@@ -59,7 +64,7 @@ void duplicate() {
 /* Mutates the values of the children */
 void mutate() {
 	printf("Begin mutate\n");
-	srand(time(NULL));
+	srand(time(NULL ));
 	int i;
 	for (i = 0; i < LAMBDA; i++) {
 		int j;
@@ -67,7 +72,7 @@ void mutate() {
 			mutants[i]->pieces_value[j] += (rand() % 10) - 5;
 		}
 	}
-	printf("End mutint begin_time = get_ms();ate\n");
+	printf("End mutate\n");
 }
 
 /* Parents and children will play altogether to determine the fittest individuals */
@@ -93,19 +98,13 @@ void determine_match_ups() {
 	int match_up_position = 0;
 	for (i = 0; i < MU + LAMBDA; i++) {
 		for (j = 0; j < MU + LAMBDA - 1; j++) {
-			//printf("%d %d\n", i, j);
 			match_up *game = malloc(sizeof(match_up));
 			game->white = sorting_array[i];
-			game->black = sorting_array[(i + j + 1) % (MU
-					+ LAMBDA)];
+			game->black = sorting_array[(i + j + 1) % (MU + LAMBDA)];
 			match_ups_list[match_up_position] = game;
 			match_up_position++;
-			//printf("%d   :   %d\n", match_ups_list[i + j]->white->fitness, match_ups_list[i + j]->black->fitness);
 		}
 	}
-
-	//printf("%d   :   %d", match_ups_list[132]->white->fitness, match_ups_list[21]->black->fitness);
-
 	printf("End matchup\n");
 }
 
@@ -117,9 +116,11 @@ void compile_results() {
 		sorting_array[i]->fitness = 0;
 	}
 
+	//TODO : awkward behavior of 0
 	/* Counting the number of victories */
 	for (i = 0; i < (LAMBDA + MU - 1) * (LAMBDA + MU); i++) {
-		printf("hello + %d\n", i);
+		//printf("hello + %d\n", i);
+		printf("%d, %d\n", match_ups_list[i]->winner, match_ups_list[i]->white->id);
 		if (match_ups_list[i]->winner == match_ups_list[i]->white->id) {
 			printf("white");
 			match_ups_list[i]->white->fitness += 3;
@@ -131,21 +132,8 @@ void compile_results() {
 			match_ups_list[i]->white->fitness += 1;
 			match_ups_list[i]->black->fitness += 1;
 		}
-
-
-
-//		int j;
-//		for (j = 0; j < LAMBDA + MU; j++) {
-//			printf("%d   :    %d\n", sorting_array[j]->id, match_ups_list[i].winner);
-//			if (sorting_array[j]->id == match_ups_list[i].winner) {
-//				sorting_array[j]->fitness += 3;
-//			} else if (match_ups_list[i].winner == -1) {
-//				sorting_array[j]->fitness++;
-//			}
-//		}
 	}
 
-	printf("TTTTTTTTTTTTTTTTTTTTTTTTT");
 	printf("End compile\n");
 }
 
@@ -169,10 +157,10 @@ void selection() {
 	}
 	printf("\n");
 
-	qsort(sorting_array, LAMBDA + MU , sizeof(sorting_array[0]), compare);
+	qsort(sorting_array, LAMBDA + MU, sizeof(sorting_array[0]), compare);
 
 	for (k = 0; k < LAMBDA + MU; k++) {
-			printf("%d:", sorting_array[k]->fitness);
+		printf("%d:", sorting_array[k]->fitness);
 	}
 	printf("\n");
 
@@ -207,17 +195,48 @@ match_up* next_game() {
 		duplicate();
 		mutate();
 		determine_match_ups();
+
+//		0 100 300 300 500 900 0
+//		1 100 300 300 500 900 0
+//		2 100 300 300 500 900 0
+//		3 100 300 300 500 900 0
+
+		int i;
+		for (i = 0; i < (LAMBDA + MU - 1) * (LAMBDA + MU); i++) {
+			printf("%d  ;  %d  ;  %d\n", match_ups_list[i]->black->id, match_ups_list[i]->white->id, match_ups_list[i]->winner);
+		}
+		//exit(0);
+
 		played_match_ups = 0;
 		return match_ups_list[played_match_ups];
 	} else if (played_match_ups >= LAMBDA + MU - 1) { // A new generation is going to be bred
-		// Processing the results from the previous generation
-		printf("games finished\n");
+	// Processing the results from the previous generation
+		int i;
+		for (i = 0; i < (LAMBDA + MU - 1) * (LAMBDA + MU); i++) {
+			printf("%d  ;  %d  ;  %d\n", match_ups_list[i]->black->id, match_ups_list[i]->white->id, match_ups_list[i]->winner);
+		}
 		compile_results();
+		exit(0);
 		selection();
 		if (get_ms() - begin_time > evolution_time) { /* The simulation ran for the required time by the user */
+			/* Freeing the structures */
+			int i;
+			for (i = 0; i < MU; i++) {
+				free(parents[i]);
+			}
+			for (i = 0; i < LAMBDA; i++) {
+				free(mutants[i]);
+			}
+			for (i = 0; i < MU + LAMBDA; i++) {
+				free(sorting_array[i]);
+			}
+			for (i = 0; i < (LAMBDA + MU - 1) * (LAMBDA + MU); i++) {
+				free(match_ups_list[i]);
+			}
 			exit(0);
 		}
-		//exit(0);
+
+
 
 		// Breeding a new generation
 		init_evolution();

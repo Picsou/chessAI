@@ -20,12 +20,7 @@
 #define ROOK_OPEN_FILE_BONUS		15
 #define ROOK_ON_SEVENTH_BONUS		20
 
-
-/* the values of the pieces */
-/*int piece_value[6] = {
-	100, 300, 300, 500, 900, 0
-};*/
-
+/* Values for the competing AIs */
 int piece_value[2][6] = {{ 100, 300, 300, 100, 100, 0 }, { 100, 300, 300, 500, 900, 0 }};
 
 /* The "pcsq" arrays are piece/square tables. They're values
@@ -399,6 +394,7 @@ int eval_dkp(int f)
 	return r;
 }
 
+/* Values from the current match-up are set inside the chess program */
 void set_piece_value(match_up *game) {
 	int i;
 	for (i = 0; i < 6; i++) {

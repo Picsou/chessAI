@@ -15,7 +15,7 @@
 #include "protos.h"
 
 int game_over = 0; // knowing if the current game is finished
-match_up *current_game;
+match_up *current_game; // pointer to the game structure being played at the moment
 
 /* get_ms() returns the milliseconds elapsed since midnight,
    January 1, 1970. */
@@ -37,27 +37,22 @@ int get_ms()
    the user for a command (and deciphers it). */
 
 int main() {
-	//int begin_time = get_ms();
-	//int evolution_time = 1000;
-	//exit(0);
 
 	printf("\n");
 	printf("Tom Kerrigan's Simple Chess Program (TSCP)\n");
 	printf("version 1.81, 2/5/03\n");
 	printf("Copyright 1997 Tom Kerrigan\n");
 	printf("\n");
-	printf("\"help\" displays a list of commands.\n");
-	printf("\n");
 	init_hash();
-	//init_board();
 	open_book();
 	/* Temporarily deactivating the book */
 	close_book();
-	//gen();
-	//computer_side = side;
+
 	max_time = 1 << 25;
-	max_depth = 1;
+	max_depth = 2;
+
 	for (;;) {
+		/* Asking the evaluation.c file for the next game to be played */
 		current_game = next_game();
 		set_piece_value(current_game);
 
@@ -65,9 +60,6 @@ int main() {
 		gen();
 
 		for (;;) {
-			// Call to next_game() | change piece_value values for both sides | when game finished, assign winner |   |   |
-			//if (side == computer_side) {  /* computer's turn */
-
 			/* think about the move and make it */
 			think(1);
 			if (!pv[0][0].u) {
@@ -79,101 +71,17 @@ int main() {
 			makemove(pv[0][0].b);
 			ply = 0;
 			gen();
-			print_result();
+			print_result(); // Check whether the game is finished and assign points to AIs if so
 			if (game_over) {
 				game_over = 0;
 				break;
 			}
-			//computer_side = side;
 			continue;
-			//}
 		}
-		//exit(0);
 	}
-	close_book();
+	//close_book();
 	return 0;
 }
-
-		/* get user input
-		printf("tscp> ");
-		if (scanf("%s", s) == EOF)
-			return 0;
-		if (!strcmp(s, "on")) {
-			computer_side = side;
-			continue;
-		}
-		if (!strcmp(s, "off")) {
-			computer_side = EMPTY;
-			continue;
-		}
-		if (!strcmp(s, "st")) {
-			scanf("%d", &max_time);
-			max_time *= 1000;
-			max_depth = 32;
-			continue;
-		}
-		if (!strcmp(s, "sd")) {
-			scanf("%d", &max_depth);
-			max_time = 1 << 25;
-			continue;
-		}
-		if (!strcmp(s, "undo")) {
-			if (!hply)
-				continue;
-			computer_side = EMPTY;
-			takeback();
-			ply = 0;
-			gen();
-			continue;
-		}
-		if (!strcmp(s, "new")) {
-			computer_side = EMPTY;
-			init_board();
-			gen();
-			continue;
-		}
-		if (!strcmp(s, "d")) {
-			print_board();
-			continue;
-		}
-		if (!strcmp(s, "bench")) {
-			computer_side = EMPTY;
-			bench();
-			continue;
-		}
-		if (!strcmp(s, "bye")) {
-			printf("Share and enjoy!\n");
-			break;
-		}
-		if (!strcmp(s, "xboard")) {
-			xboard();
-			break;
-		}
-		if (!strcmp(s, "help")) {
-			printf("on - computer plays for the side to move\n");
-			printf("off - computer stops playing\n");
-			printf("st n - search for n seconds per move\n");
-			printf("sd n - search n ply per move\n");
-			printf("undo - takes back a move\n");
-			printf("new - starts a new game\n");
-			printf("d - display the board\n");
-			printf("bench - run the built-in benchmark\n");
-			printf("bye - exit the program\n");
-			printf("xboard - switch to XBoard mode\n");
-			printf("Enter moves in coordinate notation, e.g., e2e4, e7e8Q\n");
-			continue;
-		}
-
-		 maybe the user entered a move?
-		m = parse_move(s);
-		if (m == -1 || !makemove(gen_dat[m].m.b))
-			printf("Illegal move.\n");
-		else {
-			ply = 0;
-			gen();
-			print_result();
-		}*/
-
 
 /* parse the move s (in coordinate notation) and return the move's
    index in gen_dat, or -1 if the move is illegal */
@@ -435,31 +343,35 @@ void print_result()
 		if (in_check(side)) {
 			if (side == LIGHT) {
 				printf("0-1 {Black mates}\n");
-				printf("%d\n", current_game->black->id);
 				current_game->winner = current_game->black->id;
+				printf("IN PRINTRESULT : %d\n", current_game->black->id);
 			}
 			else {
 				printf("1-0 {White mates}\n");
-				printf("%d\n", current_game->white->id);
 				current_game->winner = current_game->white->id;
+				printf("IN PRINTRESULT : %d\n", current_game->black->id);
 			}
+			printf("END TO WIN\n");
 			game_over = 1;
 		}
 		else {
 			printf("1/2-1/2 {Stalemate}\n");
 			current_game->winner = -1;
 			game_over = 1;
+			printf("END STALEMATE\n");
 		}
 	}
 	else if (reps() == 3) {
 		printf("1/2-1/2 {Draw by repetition}\n");
 		current_game->winner = -1;
 		game_over = 1;
+		printf("END DRAW REP\n");
 	}
 	else if (fifty >= 100) {
 		printf("1/2-1/2 {Draw by fifty move rule}\n");
 		current_game->winner = -1;
 		game_over = 1;
+		printf("END DRAW 50\n");
 	}
 }
 
