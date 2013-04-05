@@ -49,7 +49,7 @@ int main() {
 	close_book();
 
 	max_time = 1 << 25;
-	max_depth = 2;
+	max_depth = 1;
 
 	for (;;) {
 		/* Asking the evaluation.c file for the next game to be played */
@@ -344,34 +344,28 @@ void print_result()
 			if (side == LIGHT) {
 				printf("0-1 {Black mates}\n");
 				current_game->winner = current_game->black->id;
-				printf("IN PRINTRESULT : %d\n", current_game->black->id);
 			}
 			else {
 				printf("1-0 {White mates}\n");
 				current_game->winner = current_game->white->id;
-				printf("IN PRINTRESULT : %d\n", current_game->black->id);
 			}
-			printf("END TO WIN\n");
 			game_over = 1;
 		}
 		else {
 			printf("1/2-1/2 {Stalemate}\n");
 			current_game->winner = -1;
 			game_over = 1;
-			printf("END STALEMATE\n");
 		}
 	}
 	else if (reps() == 3) {
 		printf("1/2-1/2 {Draw by repetition}\n");
 		current_game->winner = -1;
 		game_over = 1;
-		printf("END DRAW REP\n");
 	}
 	else if (fifty >= 100) {
 		printf("1/2-1/2 {Draw by fifty move rule}\n");
 		current_game->winner = -1;
 		game_over = 1;
-		printf("END DRAW 50\n");
 	}
 }
 

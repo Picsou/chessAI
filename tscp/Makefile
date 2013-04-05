@@ -1,5 +1,5 @@
 all : *.c
-	gcc *.c -o chess
+	gcc -Wall -Wextra *.c -o chess
 
 clean :
 	rm -rf chess
