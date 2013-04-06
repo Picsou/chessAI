@@ -23,7 +23,7 @@
 
 int individual_id = 4; /* The original individuals (0,1,2,3) are retrieved from the evolution file */
 int begin_time = 0;
-int evolution_time = 5000; /* Running time of the evolution algorithm (the last iteration finishes before leaving the program) */
+int evolution_time = 86400000; /* Running time of the evolution algorithm (the last iteration finishes before leaving the program) */
 int number_generation = 0;
 
 /* AIs' breeding */
@@ -65,7 +65,7 @@ void mutate() {
 	for (i = 0; i < LAMBDA; i++) {
 		int j;
 		for (j = 0; j < 5; j++) {
-			mutants[i]->pieces_value[j] += (rand() % 10) - 5;
+			mutants[i]->pieces_value[j] += (rand() % 30) - 15;
 		}
 	}
 }
