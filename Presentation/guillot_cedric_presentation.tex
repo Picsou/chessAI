@@ -30,13 +30,26 @@
 \tableofcontents
 \end{frame}
 
-\begin{frame}
 \section{Introduction}
-\subsection{???????}
+\begin{frame}
+\frametitle{Chess AI history}
+\begin{itemize}
+\item 1951 - Alan Turing develops on paper the first program capable of playing a full game of chess
+\item 1956 - John McCarthy invents the alpha-beta search algorithm
+\item 1957 - First practical chess program, Alex Bernstein and a team of Russian programmers
+\item 1981 - Cray Blitz becomes the first computer to gain a master rating (2200 ELO)
+\item 1997 - Deep Blue wins a six-game match against Garry Kasparov
+\item Today - Computers have reached 3250 ELO ratings
+\end{itemize}
+\end{frame}
+
+
+\section{Implementation / Strategy}
+\begin{frame}
+\tableofcontents[currentsection]
 \end{frame}
 
 \begin{frame}
-\section{Implementation / Strategy}
 \subsection{Tools}
 \frametitle{Tom Kerrigan's Simple Chess Program (TSCP)}
 \begin{itemize}
@@ -66,47 +79,51 @@
 
 \begin{frame}
 \subsection{Board evaluation / parameters evaluation}
-
-\subsubsection{Rating system}
-\subsection{•}
+\frametitle{Board evaluation / parameters evaluation}
+\begin{itemize}
+\item Board evaluated at each move during the game, using the pieces values
+\item Individuals of the same generation compete against each other
+\begin{itemize}
+\item $\frac{n(n-1)}{2}$ games per generation
+\item one game as white, one as black
+\end{itemize}
+\item Point system: 0 for loss, 3 for win, 1 for stalemate or draw
+\end{itemize}
 \end{frame}
 
-
-
-\begin{frame}
-\end{frame}
-
-\begin{frame}
-\end{frame}
-
-\begin{frame}
-\end{frame}
-
-\begin{frame}
-
-\end{frame}
-
-\begin{frame}
 \section{Results}
+\begin{frame}
+\tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
 \subsection{Set-up}
 \frametitle{Set-up}
 \begin{itemize}
 \item Search depth: n = 1
 \item One day and a half running on a standard laptop
-\item Optimized parameters: pawn, knight, bishop, rook and queen values
+\item Optimized parameters: pawn(100), knight(300), bishop(300), rook(500) and queen(900) values
 \item Evolution strategy parameters: $\mu = \frac{1}{2} \lambda = 4$
 \item Static strategy parameters: RAND(-15, 15)
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\subsection{Original AI against me}
-\subsection{Evoluted AI against me}
-\subsection{Original AI against evoluted AI}
+\subsection{AI VS Human}
+\frametitle{AI VS Human}
 \end{frame}
 
 \begin{frame}
+\subsection{Original AI against evoluted AI}
+\frametitle{Original AI against evoluted AI}
+\end{frame}
+
 \section{Future work}
+\begin{frame}
+\tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
 \frametitle{Future work}
 \end{frame}
 
