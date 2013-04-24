@@ -36,6 +36,30 @@ evolution_individual* sorting_array[LAMBDA + MU];
 match_up* match_ups_list[(LAMBDA + MU - 1) * (LAMBDA + MU)]; /* Each AI plays white and black against another AI */
 int played_match_ups;
 
+
+void reset_evolution_files() {
+	/* Set initial individuals into the evolution file */
+	FILE *evolution_file = open_file("evolution_individuals.txt", "w");
+	evolution_individual *initial = malloc(sizeof(evolution_individual));
+	initial->pieces_value[0] = 100;
+	initial->pieces_value[1] = 300;
+	initial->pieces_value[2] = 300;
+	initial->pieces_value[3] = 500;
+	initial->pieces_value[4] = 900;
+	initial->fitness = 0;
+	int i;
+	for (i = 0; i < 4; i++) {
+		initial->id = i;
+		write_individual_values(evolution_file, initial);
+	}
+	free(initial);
+	close_file(evolution_file);
+
+	/* Delete content in history file */
+	FILE *history_file = open_file("history_individuals.txt", "w");
+	close_file(history_file);
+}
+
 void init_evolution() {
 	FILE *evolution_file;
 	evolution_file = open_file("evolution_individuals.txt", "r");
@@ -66,6 +90,43 @@ void mutate() {
 		int j;
 		for (j = 0; j < 5; j++) {
 			mutants[i]->pieces_value[j] += (rand() % 30) - 15;
+		}
+	}
+	apply_boundaries();
+}
+
+void apply_boundaries() {
+	int i;
+	for (i = 0; i < LAMBDA; ++i) {
+		/* Pawn */
+		if (mutants[i]->pieces_value[PAWN] < 10) {
+			mutants[i]->pieces_value[PAWN] = 10;
+		} else if (mutants[i]->pieces_value[PAWN] > 200) {
+			mutants[i]->pieces_value[PAWN] = 200;
+		}
+		/* Knight */
+		if (mutants[i]->pieces_value[KNIGHT] < 200) {
+			mutants[i]->pieces_value[KNIGHT] = 200;
+		} else if (mutants[i]->pieces_value[KNIGHT] > 400) {
+			mutants[i]->pieces_value[KNIGHT] = 400;
+		}
+		/* Bishop */
+		if (mutants[i]->pieces_value[BISHOP] < 200) {
+			mutants[i]->pieces_value[BISHOP] = 200;
+		} else if (mutants[i]->pieces_value[BISHOP] > 400) {
+			mutants[i]->pieces_value[BISHOP] = 400;
+		}
+		/* Rook */
+		if (mutants[i]->pieces_value[ROOK] < 400) {
+			mutants[i]->pieces_value[ROOK] = 400;
+		} else if (mutants[i]->pieces_value[ROOK] > 600) {
+			mutants[i]->pieces_value[ROOK] = 600;
+		}
+		/* Queen */
+		if (mutants[i]->pieces_value[QUEEN] < 700) {
+			mutants[i]->pieces_value[QUEEN] = 700;
+		} else if (mutants[i]->pieces_value[QUEEN] > 1100) {
+			mutants[i]->pieces_value[QUEEN] = 1100;
 		}
 	}
 }
@@ -154,6 +215,9 @@ match_up* next_game() {
 	if (first_time) {
 		begin_time = get_ms();
 		first_time = 0;
+		reset_evolution_files();
+
+		printf("*************** Generation n°%d ***************\n", number_generation);
 		init_evolution();
 		duplicate();
 		mutate();
@@ -185,6 +249,7 @@ match_up* next_game() {
 		}
 
 		/* Breeding a new generation */
+		printf("*************** Generation n°%d ***************\n", number_generation);
 		init_evolution();
 		duplicate();
 		mutate();

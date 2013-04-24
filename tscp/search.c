@@ -27,7 +27,7 @@ BOOL stop_search;
 
 void think(int output)
 {
-	int i, j, x;
+	int i, x;//, j;
 
 	/* try the opening book first */
 	pv[0][0].u = book_move();
@@ -55,19 +55,19 @@ void think(int output)
 	memset(pv, 0, sizeof(pv));
 	memset(history, 0, sizeof(history));
 	if (output == 1)
-		printf("ply      nodes  score  pv\n");
+		//printf("ply      nodes  score  pv\n");
 	for (i = 1; i <= max_depth; ++i) {
 		follow_pv = TRUE;
 		x = search(-10000, 10000, i);
-		if (output == 1)
-			printf("%3d  %9d  %5d ", i, nodes, x);
-		else if (output == 2)
-			printf("%d %d %d %d",
-					i, x, (get_ms() - start_time) / 10, nodes);
+//		if (output == 1)
+//			printf("%3d  %9d  %5d ", i, nodes, x);
+//		else if (output == 2)
+//			printf("%d %d %d %d",
+//					i, x, (get_ms() - start_time) / 10, nodes);
 		if (output) {
-			for (j = 0; j < pv_length[0]; ++j)
-				printf(" %s", move_str(pv[0][j].b));
-			printf("\n");
+//			for (j = 0; j < pv_length[0]; ++j)
+//				printf(" %s", move_str(pv[0][j].b));
+//			printf("\n");
 			fflush(stdout);
 		}
 		if (x > 9000 || x < -9000)

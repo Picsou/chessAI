@@ -65,9 +65,11 @@ void write_individual_values(FILE *file, evolution_individual *ei);
 evolution_individual* retrieve_individual(FILE *file);
 
 /* evolution.c */
+void reset_evolution_files();
 void init_evolution();
 void duplicate();
 void mutate();
+void apply_boundaries();
 void determine_match_ups();
 void compile_results();
 int compare(void const *a, void const *b);

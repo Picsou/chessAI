@@ -67,7 +67,7 @@ int main() {
 				//computer_side = EMPTY;
 				continue;
 			}
-			printf("Computer's move: %s\n", move_str(pv[0][0].b));
+			//printf("Computer's move: %s\n", move_str(pv[0][0].b));
 			makemove(pv[0][0].b);
 			ply = 0;
 			gen();
