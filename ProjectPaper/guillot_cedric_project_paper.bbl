@@ -1,0 +1,22 @@
+\begin{thebibliography}{1}
+
+\bibitem{Kendall:2006}
+Hallam Nasreddine, Hendra Suhanto Poh and Graham Kendall :
+\newblock Using an Evolutionary Algorithm for the Tuning of a Chess Evaluation Function Based on a Dynamic Boundary Strategy\\
+\newblock http://red.cs.nott.ac.uk/\texttildelow gxk/papers/ieeecis2006.pdf
+
+\bibitem{Fogel:2004}
+DAVID B. FOGEL, FELLOW, IEEE, TIMOTHY J. HAYS, SARAH L. HAHN, AND JAMES QUON :
+\newblock A Self-Learning Evolutionary Chess Program\\
+\newblock http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=1360168
+
+\bibitem{Kendall:2001}
+Graham Kendall, Glenn Whitwell :
+\newblock An Evolutionary Approach for the Tuning of a Chess Evaluation Function using Population Dynamics\\
+\newblock http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=934299
+
+\bibitem{crafty}
+Crafty :
+\newblock http://www.craftychess.com/
+
+\end{thebibliography}

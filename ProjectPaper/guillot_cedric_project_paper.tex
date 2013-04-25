@@ -1,41 +1,49 @@
-\documentclass[a4paper,12pt,twocolumn]{article}
-
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{fullpage}
+\documentclass[11pt,a4paper,twocolumn]{article}
+\usepackage[utf8x]{inputenc}
 \usepackage{graphicx}
-\usepackage{url}
-\usepackage{xspace}
-\usepackage[francais]{babel}
-\usepackage{appendix}
-\usepackage[bmargin=2cm,tmargin=2cm,lmargin=2cm,rmargin=2cm]{geometry}
-\usepackage{color}
+\usepackage{ucs}
+\usepackage[margin=0.3in]{geometry}
 \usepackage{listings}
-\lstset{
-  morekeywords={abort,abs,accept,access,all,and,array,at,begin,body,
-      case,constant,declare,delay,delta,digits,do,else,elsif,end,entry,
-      exception,exit,for,function,generic,goto,if,in,is,limited,loop,
-      mod,new,not,null,of,or,others,out,package,pragma,private,
-      procedure,raise,range,record,rem,renames,return,reverse,select,
-      separate,subtype,task,terminate,then,type,use,when,while,with,
-      xor,abstract,aliased,protected,requeue,tagged,until},
-  sensitive=f,
-  morecomment=[l]--,
-  morestring=[d]",
-  showstringspaces=false,
-  basicstyle=\small\ttfamily,
-  keywordstyle=\bf\small,
-  commentstyle=\itshape,
-  stringstyle=\sf,
-  extendedchars=true,
-  columns=[c]fixed
-}
+\usepackage{textcomp}
+\setlength{\columnsep}{0.8cm}
 
 \usepackage{fancyhdr}
-
 \pagestyle{fancyplain}
 \lhead{\footnotesize\sf CPSC 565 - Winter 2013}
 \rhead{\footnotesize\sf Cédric Guillot}
+
+%\documentclass[a4paper,12pt,twocolumn]{article}
+
+%\usepackage[utf8]{inputenc}
+%\usepackage[T1]{fontenc}
+%\usepackage{fullpage}
+%\usepackage{graphicx}
+%\usepackage{url}
+%\usepackage{xspace}
+%\usepackage[francais]{babel}
+%\usepackage{appendix}
+%\usepackage[bmargin=2cm,tmargin=2cm,lmargin=2cm,rmargin=2cm]{geometry}
+%\usepackage{color}
+%\usepackage{listings}
+%\lstset{
+%  morekeywords={abort,abs,accept,access,all,and,array,at,begin,body,
+%      case,constant,declare,delay,delta,digits,do,else,elsif,end,entry,
+%      exception,exit,for,function,generic,goto,if,in,is,limited,loop,
+%      mod,new,not,null,of,or,others,out,package,pragma,private,
+%      procedure,raise,range,record,rem,renames,return,reverse,select,
+%      separate,subtype,task,terminate,then,type,use,when,while,with,
+%      xor,abstract,aliased,protected,requeue,tagged,until},
+%  sensitive=f,
+%  morecomment=[l]--,
+%  morestring=[d]",
+%  showstringspaces=false,
+%  basicstyle=\small\ttfamily,
+%  keywordstyle=\bf\small,
+%  commentstyle=\itshape,
+%  stringstyle=\sf,
+%  extendedchars=true,
+%  columns=[c]fixed
+%}
 
 \title{Chess AI improvement through an evolutionary approach}
 \author{Cédric Guillot, University of Calgary (cpguillo@ucalgary.ca)}
@@ -46,7 +54,7 @@
 \maketitle
 
 \begin{abstract}
-This paper presents the results in the attempt of improving a classic chess AI by using an evolutionary approach. The general idea is to fine-tune the parameters used by the chess AI (pieces values) in its board evaluation.
+\textit{This paper presents the results in the attempt of improving a classic chess AI by using an evolutionary approach. The general idea is to fine-tune the parameters used by the chess AI (pieces values) in its board evaluation.}
 \end{abstract}
 
 \section{Introduction and Goals}
@@ -85,6 +93,7 @@ The algorithm is described below:
 \item Parents and children each play two games against one another (once as black, once as white),
 \item Depending on the number of points collected, the $\mu$ better individuals are selected as the new parents for the next generation.
 \end{itemize}
+As there are $\mu + \lambda$ individuals per generation, it amounts to $\frac{(\mu + \lambda)\times (\mu + \lambda - 1)}{2}$ games to play for each generation. This is the main reason why we decided to choose the performance of the C language.\\
 The points distributed after one game are as follow:
 \begin{itemize}
 \item Victory: 3 points,
@@ -96,26 +105,29 @@ Hence, our evaluation function is relative to the individuals that are part of t
 \subsubsection{Boundary checking parameters}
 For reasons of convenience, we decided to implement a boundary checking mechanism to ensure that the values remain reasonable throughout the evolution. That prevented some values to get ridiculously far away from their expected range. The ranges that were used are described below:
 \begin{itemize}
-\item Pawn: 10 < value < 200,
-\item Knight: 200 < value < 400,
-\item Bishop: 200 < value < 400,
-\item Rook: 400 < value < 600,
-\item Queen: 700 < value < 1100.
+\item Pawn: $10 < value < 200$,
+\item Knight: $200 < value < 400$,
+\item Bishop: $200 < value < 400$,
+\item Rook: $400 < value < 600$,
+\item Queen: $700 < value < 1100$.
 \end{itemize}
 
 \subsubsection{Strategy parameters}
-Initially, the random change that was applied to each child was set to be a random integer betweem -15 and 15.
+Initially, the random change that was applied to each child was set to be a random integer betweem -15 and 15.??????????????????????????????????????
 
 \section{Results and discussion}
-We fist describe the experimental parameters before coming to the results (by interpreting the graphs given by the evolution of individuals.
+We first describe the experimental parameters before presenting the results (by interpreting the graphs given by the evolution of individuals).
 
 \subsection{Experimental parameters}
-\subsection{Evoluted AI}
+The depth of search for the experiment is $n = 1$. This value was chosen in order to test the former and new AI by a person with a beginner level. The initial population is made of 4 identical individuals with values 100, 300, 300, 500, 900. The evolution parameters are set to $\mu = 4$ and $\lambda = 2\mu = 8$. The algorithm was left running for 1000 iterations (a history of individuals of around 4000).
+
+\subsection{Evolved AI}
+
 \subsection{Visual evolution}
 \subsection{Conclusion}
 
-\section*{References}
-
+\bibliographystyle{splncs}
+\bibliography{guillot_cedric_project_paper}
 
 \end{document}
 
