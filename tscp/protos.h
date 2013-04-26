@@ -65,7 +65,7 @@ void write_individual_values(FILE *file, evolution_individual *ei);
 evolution_individual* retrieve_individual(FILE *file);
 
 /* evolution.c */
-void reset_evolution_files();
+void reset_evolution();
 void init_evolution();
 void duplicate();
 void mutate();

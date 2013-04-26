@@ -20,6 +20,10 @@
 /* Evolution parameters */
 #define MU			4
 #define LAMBDA		8
+int random_intervals[5] = { 5, 8, 13, 15, 20 };
+float rechenberg[5] = {1, 1, 1, 1, 1};
+float BETA = 1.5;
+float INV_BETA = (float) 2 / 3;
 
 int individual_id = 4; /* The original individuals (0,1,2,3) are retrieved from the evolution file */
 int begin_time = 0;
@@ -36,8 +40,8 @@ evolution_individual* sorting_array[LAMBDA + MU];
 match_up* match_ups_list[(LAMBDA + MU - 1) * (LAMBDA + MU)]; /* Each AI plays white and black against another AI */
 int played_match_ups;
 
-
-void reset_evolution_files() {
+/* Reset the evolution files to their beginning state and set the random number generator */
+void reset_evolution() {
 	/* Set initial individuals into the evolution file */
 	FILE *evolution_file = open_file("evolution_individuals.txt", "w");
 	evolution_individual *initial = malloc(sizeof(evolution_individual));
@@ -58,6 +62,9 @@ void reset_evolution_files() {
 	/* Delete content in history file */
 	FILE *history_file = open_file("history_individuals.txt", "w");
 	close_file(history_file);
+
+	/* Set the random generator */
+	srand(time(NULL));
 }
 
 void init_evolution() {
@@ -84,12 +91,24 @@ void duplicate() {
 
 /* Mutates the values of the children */
 void mutate() {
-	srand(time(NULL));
+	/* Apply Rechenberg heuristics */
+	int k;
+	for (k = 0; k < 5; k++) {
+		if (rand() % 2 == 0) {
+			rechenberg[k] = BETA;
+		} else {
+			rechenberg[k] = INV_BETA;
+		}
+		random_intervals[k] = random_intervals[k] * rechenberg[k] + 0.5f; // Rounding up
+	}
+
+	/* Mutating children */
 	int i;
 	for (i = 0; i < LAMBDA; i++) {
 		int j;
 		for (j = 0; j < 5; j++) {
-			mutants[i]->pieces_value[j] += (rand() % 30) - 15;
+			mutants[i]->pieces_value[j] += (rand() % (2 * random_intervals[j]))
+					- random_intervals[j];
 		}
 	}
 	apply_boundaries();
@@ -215,9 +234,10 @@ match_up* next_game() {
 	if (first_time) {
 		begin_time = get_ms();
 		first_time = 0;
-		reset_evolution_files();
+		reset_evolution();
 
-		printf("*************** Generation n°%d ***************\n", number_generation);
+		printf("*************** Generation n°%d ***************\n",
+				number_generation);
 		init_evolution();
 		duplicate();
 		mutate();
@@ -249,7 +269,8 @@ match_up* next_game() {
 		}
 
 		/* Breeding a new generation */
-		printf("*************** Generation n°%d ***************\n", number_generation);
+		printf("*************** Generation n°%d ***************\n",
+				number_generation);
 		init_evolution();
 		duplicate();
 		mutate();

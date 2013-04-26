@@ -49,12 +49,5 @@ evolution_individual* retrieve_individual(FILE *file) {
 		}
 		split = strtok(NULL, " \n");
 	}
-//	printf("%d %d %d %d %d %d %d\n", retrieved_individual->id,
-//			retrieved_individual->pieces_value[0],
-//			retrieved_individual->pieces_value[1],
-//			retrieved_individual->pieces_value[2],
-//			retrieved_individual->pieces_value[3],
-//			retrieved_individual->pieces_value[4],
-//			retrieved_individual->fitness);
 	return retrieved_individual;
 }
