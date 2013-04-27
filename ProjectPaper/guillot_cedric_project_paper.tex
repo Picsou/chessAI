@@ -113,18 +113,43 @@ For reasons of convenience, we decided to implement a boundary checking mechanis
 \end{itemize}
 
 \subsubsection{Strategy parameters}
-Initially, the random change that was applied to each child was set to be a random integer betweem -15 and 15.??????????????????????????????????????
+Initially, the random change that was applied to each child was set to be a random integer between -15 and 15. Then, due to the ranges of the values, the variations got changed to random number in [-5;5], [-8;8], [-13;13], [-15;15], [-20;20] respectively for pawn, knight, bishop, rook and queen. Finally, we tried to implement Rechenberg's heuristics for modifying the intervals.
 
 \section{Results and discussion}
 We first describe the experimental parameters before presenting the results (by interpreting the graphs given by the evolution of individuals).
 
 \subsection{Experimental parameters}
-The depth of search for the experiment is $n = 1$. This value was chosen in order to test the former and new AI by a person with a beginner level. The initial population is made of 4 identical individuals with values 100, 300, 300, 500, 900. The evolution parameters are set to $\mu = 4$ and $\lambda = 2\mu = 8$. The algorithm was left running for 1000 iterations (a history of individuals of around 4000).
+The depth of search for the experiment is $n = 1$. This value was chosen in order to test the former and new AI by a person with a beginner level. The initial population was made of 4 identical individuals with values 100, 300, 300, 500, 900. The evolution parameters were set to $\mu = 4$ and $\lambda = 2\mu = 8$. The algorithm was left running for 1000 or 500 iterations (a history of individuals of around 4000 or 2000).
 
 \subsection{Evolved AI}
+Two experiments were conducted: once involved fixed intervals for children mutation while the other one implemented the Rechenberg's heuristics. It is to be noted that for practical reasons, the two simulations were not held over the same number of iterations, although they are of the same order of magnitude (1000 and 500 approximately). Both are presented in figure 2 and 3:
 
-\subsection{Visual evolution}
+\begin{center}
+\begin{figure}
+\includegraphics[scale=0.45]{images/history_individuals_3.png}
+\caption{Values evolution through iterations (fixed intervals)}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}
+\includegraphics[scale=0.45]{images/history_individuals_4.png}
+\caption{Values evolution through iterations (Rechenberg's heuristics)}
+\end{figure}
+\end{center}
+
+As we can see, Rechenberg's heuristics is not applicable in this context, as the individuals are changing way too fast in the simulation. This can be explained by the huge mutations that take place because the intervals are too important. The most interesting experiment is with fixed intervals. However, it is hard to be satisfied with the results from above. First of all, there is no convergence towards any specific value for any of the 5 values. Secondly, the boundaries applied on the values may have impaired evolutions that might have occured.\\
+
+But we can still see 3 things emerging. Firstly, the pawn value may be lower than expected (on average lower than 100). Secondly, the queen value is slightly higher than 900, which confirms than loosing your queen in a chess game means a great loss for the win. Finally, the knight seems to be superior to the bishop, which means practically means that trading your bishop for the opponent's knight is a good move.
+
+\subsection{Discussion}
+The study that was lead on improving the values suffers from a couple of shortcomings. At the end of the 'fixed intervals' simulation, both AI played against one another, and both games (one as black then white for both AIs) ended up on a draw. That means that no significant improvement can be seen with the method chosen for comparing the AIs.\\
+
+The first problem that could be responsible for the lack of improvement is the depth of the search tree that was reduced to $n=1$. The AIs could not properly exercise the values at a reasonable level.\\
+The major problem was due to the relative fitness function that was introduced. Even if we kept the fittest individuals after each generation, former versions of the program ended up with worse solutions than the initial ones. Further study would be required to pinpoint at the phenomenon happening. The solution that should be explored should involve an absolute ranking system; the ELO ratings adapted for AIs would provide the natural rankings for rating the individuals playing the chess games.
+
 \subsection{Conclusion}
+In conclusion, this project aimed at improving the chess AI of a standard chess engine. Although it failed at providing a strictly better set of values, interesting trends were observed to come up with an equivalently good AI. This could serve in the future as a starting point for improving a more general set of chess AIs with different built-in strategies.
 
 \bibliographystyle{splncs}
 \bibliography{guillot_cedric_project_paper}
