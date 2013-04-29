@@ -1,0 +1,94 @@
+% 
+% Example file for conference proceedings in Springer Verlag's LNCS format
+%
+% Christian Jacob, September 2007
+% (with LaTeX code provided by Navneet Bhalla)
+%
+
+\documentclass[runningheads]{llncs}
+\usepackage{llncsdoc}
+\usepackage{makeidx}
+\usepackage[utf8x]{inputenc}
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Preamble: Packages required for the paper
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{epstopdf}
+\makeindex
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+\begin{document}
+
+\title{Chess AI improvement through an evolutionary approach}
+%\subtitle{<subtitle of your contribution>}
+%\titlerunning{<Your abbreviated contribution title>} 
+%\toctitle{<Your changed title for the table of contents>}
+
+\author{Cédric Guillot}
+%\authorrunning{<abbreviated author list>}
+%\tocauthor{<enhanced author list for the table of contents>}
+
+\institute{ 
+% Here either insert CPSC 565 or CPSC 607:
+CPSC 565 - Winter 2013\\
+\email{cpguillo@ucalgary.ca}
+}
+
+\maketitle
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% ABSTRACT
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+\begin{abstract} 
+The purpose of this project is to provide an enhanced strategy for chess by using an evolutionary approach. It would aim at improving a pre-existing strategy by tuning its parameters.
+\end{abstract}
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% MAIN TEXT
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+\section{Introduction}
+\label{sec:Introduction}
+AI in chess has been of a particular interest for a very long time. Even before the computer could be used, some algorithms had already come to life to challenge humans. For a long time and still today, the brute force method has been widely used in order to improve the chess AIs. But given the number of possible games, the brute force method can only be applied under a certain number of plies. That is why applying the evolutionary approach to that area may be beneficial and smarter. The vastness of the solution domain also makes it a nice candidate for that purpose.\\
+
+In my project, I would like to start from a simple strategy and progressively improving it in order to beat a standard player (I will consider myself a standard player ie knowing how to play but no special training).
+
+\section{Related Work}
+Several article caught my attention and made me feel confident that such a project could be undertaken (\cite{Kendall:2006}, \cite{Fogel:2004}, \cite{Kendall:2001}).\\
+
+They all relied on a pre-existing strategy with parameters assigned to the different chess pieces. The algorithms they implemented provided better results than the original ones and they could challenge commercial software.
+
+\section{Project Details}
+The basic idea is to have a look at a given strategy and try to improve its parameters by using an evaluation function that gives us an idea of how favorable to us the chess plate currently is.\\
+The core of my project would be to build a simple strategy inspired on the available strategies and then improve it by interation. The goal would be to beat a standard player by reaching a good enough strategy after a certain number of iterations.\\
+If this is successful soon enough, I would go on and try to improve a more complexe solution that can be found with open source chess engines \cite{crafty}.
+
+\section{Software Tools}
+The chess engine Crafty \cite{crafty} (written in C) will be used for performance purposes, as a lot of games will have to be played in order to compare two strategies.\\
+Additionaly, I may use a couple of other engines as an inspiration for developing my original solution.
+
+\section{Time line}
+The timeline will be as follows :
+\begin{enumerate}
+\item Week 1 and 2 : getting familiar with Crafty and the strategies,
+\item Week 3 and 4 : building my own strategy based on the previous work,
+\item Week 5 and 6 : implementing the evolution algorithm and testing the result solution against the simple solution and a human.
+\end{enumerate}
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% References: Bibliography
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+\bibliographystyle{splncs}
+\bibliography{CPSC567_Guillot_Project_Proposal} % add bibliography file here
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Index (optional): collects items in text from \index{...} command
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%\printindex
+
+\end{document}
