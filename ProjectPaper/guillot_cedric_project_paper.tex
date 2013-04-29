@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper,twocolumn]{article}
+\documentclass[12pt,a4paper,twocolumn]{article}
 \usepackage[utf8x]{inputenc}
 \usepackage{graphicx}
 \usepackage{ucs}
@@ -12,39 +12,6 @@
 \lhead{\footnotesize\sf CPSC 565 - Winter 2013}
 \rhead{\footnotesize\sf Cédric Guillot}
 
-%\documentclass[a4paper,12pt,twocolumn]{article}
-
-%\usepackage[utf8]{inputenc}
-%\usepackage[T1]{fontenc}
-%\usepackage{fullpage}
-%\usepackage{graphicx}
-%\usepackage{url}
-%\usepackage{xspace}
-%\usepackage[francais]{babel}
-%\usepackage{appendix}
-%\usepackage[bmargin=2cm,tmargin=2cm,lmargin=2cm,rmargin=2cm]{geometry}
-%\usepackage{color}
-%\usepackage{listings}
-%\lstset{
-%  morekeywords={abort,abs,accept,access,all,and,array,at,begin,body,
-%      case,constant,declare,delay,delta,digits,do,else,elsif,end,entry,
-%      exception,exit,for,function,generic,goto,if,in,is,limited,loop,
-%      mod,new,not,null,of,or,others,out,package,pragma,private,
-%      procedure,raise,range,record,rem,renames,return,reverse,select,
-%      separate,subtype,task,terminate,then,type,use,when,while,with,
-%      xor,abstract,aliased,protected,requeue,tagged,until},
-%  sensitive=f,
-%  morecomment=[l]--,
-%  morestring=[d]",
-%  showstringspaces=false,
-%  basicstyle=\small\ttfamily,
-%  keywordstyle=\bf\small,
-%  commentstyle=\itshape,
-%  stringstyle=\sf,
-%  extendedchars=true,
-%  columns=[c]fixed
-%}
-
 \title{Chess AI improvement through an evolutionary approach}
 \author{Cédric Guillot, University of Calgary (cpguillo@ucalgary.ca)}
 \date{April 30, 2013}
@@ -57,17 +24,17 @@
 \textit{This paper presents the results in the attempt of improving a classic chess AI by using an evolutionary approach. The general idea is to fine-tune the parameters used by the chess AI (pieces values) in its board evaluation.}
 \end{abstract}
 
-\section{Introduction and Goals}
-Chess AI has been a subject of interest for over 70 years now. The first paper program that could play a game of chess was written in 1951 by Alan turing, and the most symbolic achievement was Deep Blue (chess AI developed by IBM) that beated the former world champion Garry Kasparov in a regular cheess match.\\
+\section{Introduction and background}
+Chess AI has been a subject of interest for over 70 years now. The first paper program that could play a game of chess was written in 1951 by Alan turing, and the most symbolic achievement was Deep Blue (chess AI developed by IBM) that beated the former world champion Garry Kasparov in a regular chess match.\\
 Strategies for chess AI have improved but they still use parameters assigned to each kind of pieces in order to evaluate how favorable the chess board currently is to us. For that reason, this project aims at fine-tuning these parameters, more specifically the values of pawn, knight, bishop, rook and queen (the king being invaluable anyway). Using an evolutionary algorithm will allow close to optimal values (for this particular strategy) to emerge and so provide a more difficult AI to beat by a human player.
 
-\section{Implementation}
+\section{Methodology / Implementation}
 The first step for applying the algorithm was to find a chess engine that would provide the board environment and the search and evalution functions that make the AI as such. It was widely influenced by the choice of a performance programming language, here the C language.
 
 \subsection{Tools}
-Tom Kerrigan’s Simple Chess Program (TSCP) was chosen because it is simple enough while at the same time providing every components for playing a full game of chess. The emphasis of this engine is put on the documentation so that one can quickly start working with it. Its AI is based on the standard alpha-beta search algorithm.\\
+Tom Kerrigan’s Simple Chess Program (TSCP) was chosen because it is simple enough while at the same time it provides every components for playing a full game of chess. The emphasis of this engine is put on the documentation so that one can quickly start working with it. Its AI is based on the standard alpha-beta search algorithm.\\
 
-The second tool that was used is GNU Xboard, as it provided a graphical interface for playing chess and compatible with TSCP. It helped with both visualising the way that the TSCP AI played and playing games against the different AIs that were generated (through finding better pieces values).
+The second tool that was used is GNU Xboard, as it provided a graphical interface for playing chess and compatible with TSCP. It helped with both visualising the way that the TSCP AI played and playing games against the different AIs that were generated (new set of the 5 values of interest).
 
 \subsection{Project architecture}
 Implementing the evolutionary strategy for TSCP was done with a plugin philosophy in mind. The following chart shows the architecture once the evolutionary plugin has been added:
@@ -79,10 +46,10 @@ Implementing the evolutionary strategy for TSCP was done with a plugin philosoph
 \end{figure}
 \end{center}
 
-Basically, main.c still controls the flow of the program, but instead of asking for a move to the player, it will ask the evolution.c module for the next game to play by a call to next\_game() method. The writer module takes care of keeping an history file with the best individuals from each generation. It helps with drawing the pieces values charts that we focus on in the results section.
+Basically, main.c still controls the flow of the program, but instead of asking for a move to the player, it will ask the evolution.c module for the next game to play by a call to next\_game() method, and the two AIs involved will play on their own. The writer module takes care of keeping an history file with the best $\mu$ individuals from each generation. It helps with drawing the pieces values charts that we focus on in the results section.
 
 \subsection{Algorithm}
-Evolving the values used for the 5 types of pieces that we are interested in is done using an special kind of evolutionary algorithm. We call 'individual' for that algorithm the set of 5 values for pawn, knight, bishop, rook and queen (initial values of respectively 100, 300, 300, 500, 900).
+Evolving the values used for the 5 types of pieces that we are interested in is done using a special kind of evolutionary algorithm. We call 'individual' for that algorithm the set of 5 values for pawn, knight, bishop, rook and queen (initial values of respectively 100, 300, 300, 500, 900).
 
 \subsubsection{Evolution strategy}
 Before we get into details, it is crucial to understand that the values we are evolving remain the same during a game between two individuals (the BOARD evaluation function uses the same values from the individuals during the same game). Our OWN evaluation function is based on the games that individuals play against each other (with their values feeded into the chess AI for the BOARD evaluation function).\\
@@ -119,7 +86,7 @@ Initially, the random change that was applied to each child was set to be a rand
 We first describe the experimental parameters before presenting the results (by interpreting the graphs given by the evolution of individuals).
 
 \subsection{Experimental parameters}
-The depth of search for the experiment is $n = 1$. This value was chosen in order to test the former and new AI by a person with a beginner level. The initial population was made of 4 identical individuals with values 100, 300, 300, 500, 900. The evolution parameters were set to $\mu = 4$ and $\lambda = 2\mu = 8$. The algorithm was left running for 1000 or 500 iterations (a history of individuals of around 4000 or 2000).
+The depth of search for the experiment is $n = 1$. This value was chosen in order to test the former and new AI against a person with a beginner level. The initial population was made of 4 identical individuals with values 100, 300, 300, 500, 900. The evolution parameters were set to $\mu = 4$ and $\lambda = 2\mu = 8$. The algorithm was left running for 1000 or 500 iterations (a history of individuals of around 4000 or 2000).
 
 \subsection{Evolved AI}
 Two experiments were conducted: once involved fixed intervals for children mutation while the other one implemented the Rechenberg's heuristics. It is to be noted that for practical reasons, the two simulations were not held over the same number of iterations, although they are of the same order of magnitude (1000 and 500 approximately). Both are presented in figure 2 and 3:
@@ -138,12 +105,12 @@ Two experiments were conducted: once involved fixed intervals for children mutat
 \end{figure}
 \end{center}
 
-As we can see, Rechenberg's heuristics is not applicable in this context, as the individuals are changing way too fast in the simulation. This can be explained by the huge mutations that take place because the intervals are too important. The most interesting experiment is with fixed intervals. However, it is hard to be satisfied with the results from above. First of all, there is no convergence towards any specific value for any of the 5 values. Secondly, the boundaries applied on the values may have impaired evolutions that might have occured.\\
+As we can see, Rechenberg's heuristics is not applicable in this context, as the individuals are changing way too fast in the simulation. This can be explained by the huge mutations that take place because the intervals are too large. The most interesting experiment is with fixed intervals. However, it is hard to be satisfied with the results from above. First of all, there is no convergence towards any specific value for any of the 5 values. Secondly, the boundaries applied on the values may have impaired evolutions that might have occured.\\
 
-But we can still see 3 things emerging. Firstly, the pawn value may be lower than expected (on average lower than 100). Secondly, the queen value is slightly higher than 900, which confirms than loosing your queen in a chess game means a great loss for the win. Finally, the knight seems to be superior to the bishop, which means practically means that trading your bishop for the opponent's knight is a good move.
+But we can still see 3 things emerging. Firstly, the pawn value may be lower than expected (on average lower than 100). Secondly, the queen value is slightly higher than 900, which confirms than loosing your queen in a chess game means a great loss for the win. Finally, the knight seems to be superior to the bishop, which practically means that trading your bishop for the opponent's knight is a good move.
 
 \subsection{Discussion}
-The study that was lead on improving the values suffers from a couple of shortcomings. At the end of the 'fixed intervals' simulation, both AI played against one another, and both games (one as black then white for both AIs) ended up on a draw. That means that no significant improvement can be seen with the method chosen for comparing the AIs.\\
+The study that was lead on improving the values suffers from a couple of shortcomings. At the end of the 'fixed intervals' simulation, both AI played against one another, and both games (one as black then white for both AIs) ended up in a draw. That means that no significant improvement can be seen with the method chosen for comparing the AIs.\\
 
 The first problem that could be responsible for the lack of improvement is the depth of the search tree that was reduced to $n=1$. The AIs could not properly exercise the values at a reasonable level.\\
 The major problem was due to the relative fitness function that was introduced. Even if we kept the fittest individuals after each generation, former versions of the program ended up with worse solutions than the initial ones. Further study would be required to pinpoint at the phenomenon happening. The solution that should be explored should involve an absolute ranking system; the ELO ratings adapted for AIs would provide the natural rankings for rating the individuals playing the chess games.
